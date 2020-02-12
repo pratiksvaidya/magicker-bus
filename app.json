@@ -26,6 +26,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "description": "A conversational assistant helping you navigate the University of Michigan's blue buses to get to your desired destinations around campus!",
+    "githubUrl": "https://github.com/pratiksvaidya/magicker-bus"
   }
 }
