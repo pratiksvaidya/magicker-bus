@@ -5,6 +5,7 @@ export default [{
         user: {
             _id: 2,
             name: 'Magicker Bus',
+            avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
         },
     },
     {
@@ -14,6 +15,7 @@ export default [{
         user: {
             _id: 2,
             name: 'Magicker Bus',
+            avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
         },
     }
 ]
