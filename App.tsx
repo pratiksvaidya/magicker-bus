@@ -83,7 +83,7 @@ export default class App extends Component {
   onSend = (messages = []) => {
     const step = this.state.step + 1
     this.setState((previousState: any) => {
-      const sentMessages = [{ ...messages[0], sent: true, received: true }]
+      const sentMessages = [{ ...messages[0], sent: false, received: false }]
       return {
         messages: GiftedChat.append(
           previousState.messages,
@@ -93,24 +93,40 @@ export default class App extends Component {
         step,
       }
     })
-    this.setState((previousState: any) => {
-      const response = [{
-        _id: 4,
-        text: 'Yes, there are current three Bursley-Baits buses running.',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'Magicker Bus',
-          avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-        },
-      }] as unknown
-      return {
-      messages: GiftedChat.append(
-        previousState.messages,
-        response as IMessage[]
-      )
-    }
-  })
+    setTimeout(() => {
+      this.setState((previousState: any) => {
+        let response = [] as unknown
+        if (previousState.messages.length === 3) {
+          response = [{
+            _id: 3,
+            text: 'Yes, there are current three Bursley-Baits buses running.',
+            createdAt: new Date(),
+            user: {
+              _id: 2,
+              name: 'Magicker Bus',
+              avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+            },
+          }] as unknown
+        } else {
+          response = [{
+            _id: 6,
+            text: 'No problem! Can I help you with anything else?',
+            createdAt: new Date(),
+            user: {
+              _id: 2,
+              name: 'Magicker Bus',
+              avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+            },
+          }] as unknown
+        }
+        return {
+        messages: GiftedChat.append(
+          previousState.messages,
+          response as IMessage[]
+        )
+      }
+    })
+  }, 1000)
 }
 
 parsePatterns = (_linkStyle: any) => {
