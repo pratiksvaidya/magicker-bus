@@ -14,12 +14,15 @@ import {
   takePictureAsync,
 } from './mediaUtils'
 
+import { FontAwesome } from '@expo/vector-icons';
+
 export default class CustomActions extends React.Component {
   onActionsPress = () => {
     const options = [
-      'Choose From Library',
-      'Take Picture',
-      'Send Location',
+      // 'Choose From Library',
+      // 'Take Picture',
+      // 'Send Location',
+      'Call Billy',
       'Cancel',
     ]
     const cancelButtonIndex = options.length - 1
@@ -32,13 +35,13 @@ export default class CustomActions extends React.Component {
         const { onSend } = this.props
         switch (buttonIndex) {
           case 0:
-            pickImageAsync(onSend)
+            // pickImageAsync(onSend)
             return
-          case 1:
-            takePictureAsync(onSend)
-            return
-          case 2:
-            getLocationAsync(onSend)
+          // case 1:
+          //   takePictureAsync(onSend)
+          //   return
+          // case 2:
+          //   getLocationAsync(onSend)
           default:
         }
       },
@@ -50,9 +53,7 @@ export default class CustomActions extends React.Component {
       return this.props.renderIcon()
     }
     return (
-      <View style={[styles.wrapper, this.props.wrapperStyle]}>
-        <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
-      </View>
+      <FontAwesome style={[styles.microphoneIcon]} name={'microphone'} />
     )
   }
 
@@ -75,18 +76,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginBottom: 10,
   },
-  wrapper: {
-    borderRadius: 13,
-    borderColor: '#b2b2b2',
-    borderWidth: 2,
-    flex: 1,
-  },
-  iconText: {
+  microphoneIcon: {
     color: '#b2b2b2',
-    fontWeight: 'bold',
-    fontSize: 16,
-    backgroundColor: 'transparent',
+    fontSize: 20,
     textAlign: 'center',
+    backgroundColor: 'transparent',
+
   },
 })
 
