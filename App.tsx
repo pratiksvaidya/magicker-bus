@@ -80,6 +80,8 @@ export default class App extends Component {
     }, 1000) // simulating network
   }
 
+  dialogToken = ""
+
   onSend = (messages = []) => {
     const step = this.state.step + 1
     this.setState((previousState: any) => {
@@ -93,194 +95,209 @@ export default class App extends Component {
         step,
       }
     })
-    setTimeout(() => {
-      this.setState((previousState: any) => {
-        let response = [] as unknown
-        if (previousState.messages.length === 3) {
-          response = [{
-            _id: 3,
-            text: 'Yes, there are current three Bursley-Baits buses running.',
-            createdAt: new Date(),
-            user: {
-              _id: 2,
-              name: 'Magicker Bus',
-              avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-            },
-          }] as unknown
-        } else {
-          response = [{
-            _id: 6,
-            text: 'No problem! Can I help you with anything else?',
-            createdAt: new Date(),
-            user: {
-              _id: 2,
-              name: 'Magicker Bus',
-              avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-            },
-          }] as unknown
-        }
-        return {
+
+    const url = "https://api.clinc.ai/v1/query/"
+
+    const data = JSON.stringify({
+      "query": messages[0].text,
+      "dialog": this.dialogToken
+    });
+
+    var xhr = new XMLHttpRequest();
+
+    const app = this;
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        var jsonResponse = JSON.parse(this.responseText);
+        app.dialogToken = jsonResponse.dialog;
+        console.log(jsonResponse);
+
+        app.setState((previousState: any) => {
+          let response = [] as unknown
+            response = [{
+              _id: app.state.step + 2,
+              text: jsonResponse.visuals.formattedResponse,
+              createdAt: new Date(),
+              user: {
+                _id: 2,
+                name: 'Magicker Bus',
+                avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+              },
+            }] as unknown
+          return {
+            messages: GiftedChat.append(
+              previousState.messages,
+              response as IMessage[]
+            )
+          }
+        })
+
+
+      }
+    });
+
+    xhr.open("POST", url);
+
+    // When using a Clinc API Key
+    xhr.setRequestHeader("Authorization", "app-key 9f9c551de45f499c5c291472d2779ac7b497e9b9");
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  parsePatterns = (_linkStyle: any) => {
+    return [
+      {
+        pattern: /#(\w+)/,
+        style: { textDecorationLine: 'underline', color: 'darkorange' },
+        onPress: () => Linking.openURL('http://gifted.chat'),
+      },
+    ]
+  }
+
+  renderCustomView(props) {
+    return <CustomView {...props} />
+  }
+
+  onReceive = (text: string) => {
+    this.setState((previousState: any) => {
+      return {
         messages: GiftedChat.append(
-          previousState.messages,
-          response as IMessage[]
-        )
+          previousState.messages as any,
+          [
+            {
+              _id: Math.round(Math.random() * 1000000),
+              text,
+              createdAt: new Date(),
+              user: otherUser,
+            },
+          ],
+          Platform.OS !== 'web',
+        ),
       }
     })
-  }, 1000)
-}
+  }
 
-parsePatterns = (_linkStyle: any) => {
-  return [
-    {
-      pattern: /#(\w+)/,
-      style: { textDecorationLine: 'underline', color: 'darkorange' },
-      onPress: () => Linking.openURL('http://gifted.chat'),
-    },
-  ]
-}
+  onSendFromUser = (messages = []) => {
+    const createdAt = new Date()
+    const messagesToUpload = messages.map(message => ({
+      ...message,
+      user,
+      createdAt,
+      _id: Math.round(Math.random() * 1000000),
+    }))
+    this.onSend(messagesToUpload)
+  }
 
-renderCustomView(props) {
-  return <CustomView {...props} />
-}
+  setIsTyping = () => {
+    this.setState({
+      isTyping: !this.state.isTyping,
+    })
+  }
 
-onReceive = (text: string) => {
-  this.setState((previousState: any) => {
-    return {
-      messages: GiftedChat.append(
-        previousState.messages as any,
-        [
-          {
-            _id: Math.round(Math.random() * 1000000),
-            text,
-            createdAt: new Date(),
-            user: otherUser,
-          },
-        ],
-        Platform.OS !== 'web',
-      ),
-    }
-  })
-}
-
-onSendFromUser = (messages = []) => {
-  const createdAt = new Date()
-  const messagesToUpload = messages.map(message => ({
-    ...message,
-    user,
-    createdAt,
-    _id: Math.round(Math.random() * 1000000),
-  }))
-  this.onSend(messagesToUpload)
-}
-
-setIsTyping = () => {
-  this.setState({
-    isTyping: !this.state.isTyping,
-  })
-}
-
-renderAccessory = () => (
-  <AccessoryBar onSend={this.onSendFromUser} isTyping={this.setIsTyping} />
-)
-
-renderCustomActions = props =>
-  Platform.OS === 'web' ? null : (
-    <CustomActions {...props} onSend={this.onSendFromUser} />
+  renderAccessory = () => (
+    <AccessoryBar onSend={this.onSendFromUser} isTyping={this.setIsTyping} />
   )
 
-renderBubble = (props: any) => {
-  return <Bubble {...props} />
-}
+  renderCustomActions = props =>
+    Platform.OS === 'web' ? null : (
+      <CustomActions {...props} onSend={this.onSendFromUser} />
+    )
 
-renderSystemMessage = props => {
-  return (
-    <SystemMessage
-      {...props}
-      containerStyle={{
-        marginBottom: 15,
-      }}
-      textStyle={{
-        fontSize: 14,
-      }}
-    />
-  )
-}
-
-// renderFooter = props => {
-//   if (this.state.typingText) {
-//     return (
-//       <View style={styles.footerContainer}>
-//         <Text style={styles.footerText}>{this.state.typingText}</Text>
-//       </View>
-//     )
-//   }
-//   return null
-// }
-
-onQuickReply = replies => {
-  const createdAt = new Date()
-  if (replies.length === 1) {
-    this.onSend([
-      {
-        createdAt,
-        _id: Math.round(Math.random() * 1000000),
-        text: replies[0].title,
-        user,
-      },
-    ])
-  } else if (replies.length > 1) {
-    this.onSend([
-      {
-        createdAt,
-        _id: Math.round(Math.random() * 1000000),
-        text: replies.map(reply => reply.title).join(', '),
-        user,
-      },
-    ])
-  } else {
-    console.warn('replies param is not set correctly')
+  renderBubble = (props: any) => {
+    return <Bubble {...props} />
   }
-}
 
-renderQuickReplySend = () => <Text>{' custom send =>'}</Text>
-
-render() {
-  if (!this.state.appIsReady) {
-    return <AppLoading />
-  }
-  return (
-    <View
-      style={styles.container}
-      accessible
-      accessibilityLabel='main'
-      testID='main'
-    >
-      <NavBar />
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={this.onSend}
-        loadEarlier={this.state.loadEarlier}
-        onLoadEarlier={this.onLoadEarlier}
-        isLoadingEarlier={this.state.isLoadingEarlier}
-        parsePatterns={this.parsePatterns}
-        user={user}
-        scrollToBottom
-        onLongPressAvatar={user => alert(JSON.stringify(user))}
-        onPressAvatar={() => alert('short press')}
-        onQuickReply={this.onQuickReply}
-        keyboardShouldPersistTaps='never'
-        renderAccessory={null} // {Platform.OS === 'web' ? null : this.renderAccessory}
-        renderActions={this.renderCustomActions}
-        renderBubble={this.renderBubble}
-        renderSystemMessage={this.renderSystemMessage}
-        renderCustomView={this.renderCustomView}
-        quickReplyStyle={{ borderRadius: 2 }}
-        renderQuickReplySend={this.renderQuickReplySend}
-        inverted={Platform.OS !== 'web'}
-        timeTextStyle={{ left: { color: 'black' }, right: { color: 'white' } }}
-        isTyping={this.state.isTyping}
+  renderSystemMessage = props => {
+    return (
+      <SystemMessage
+        {...props}
+        containerStyle={{
+          marginBottom: 15,
+        }}
+        textStyle={{
+          fontSize: 14,
+        }}
       />
-    </View>
-  )
-}
+    )
+  }
+
+  // renderFooter = props => {
+  //   if (this.state.typingText) {
+  //     return (
+  //       <View style={styles.footerContainer}>
+  //         <Text style={styles.footerText}>{this.state.typingText}</Text>
+  //       </View>
+  //     )
+  //   }
+  //   return null
+  // }
+
+  onQuickReply = replies => {
+    const createdAt = new Date()
+    if (replies.length === 1) {
+      this.onSend([
+        {
+          createdAt,
+          _id: Math.round(Math.random() * 1000000),
+          text: replies[0].title,
+          user,
+        },
+      ])
+    } else if (replies.length > 1) {
+      this.onSend([
+        {
+          createdAt,
+          _id: Math.round(Math.random() * 1000000),
+          text: replies.map(reply => reply.title).join(', '),
+          user,
+        },
+      ])
+    } else {
+      console.warn('replies param is not set correctly')
+    }
+  }
+
+  renderQuickReplySend = () => <Text>{' custom send =>'}</Text>
+
+  render() {
+    if (!this.state.appIsReady) {
+      return <AppLoading />
+    }
+    return (
+      <View
+        style={styles.container}
+        accessible
+        accessibilityLabel='main'
+        testID='main'
+      >
+        <NavBar />
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={this.onSend}
+          loadEarlier={this.state.loadEarlier}
+          onLoadEarlier={this.onLoadEarlier}
+          isLoadingEarlier={this.state.isLoadingEarlier}
+          parsePatterns={this.parsePatterns}
+          user={user}
+          scrollToBottom
+          onLongPressAvatar={user => alert(JSON.stringify(user))}
+          onPressAvatar={() => alert('short press')}
+          onQuickReply={this.onQuickReply}
+          keyboardShouldPersistTaps='never'
+          renderAccessory={null} // {Platform.OS === 'web' ? null : this.renderAccessory}
+          renderActions={this.renderCustomActions}
+          renderBubble={this.renderBubble}
+          renderSystemMessage={this.renderSystemMessage}
+          renderCustomView={this.renderCustomView}
+          quickReplyStyle={{ borderRadius: 2 }}
+          renderQuickReplySend={this.renderQuickReplySend}
+          inverted={Platform.OS !== 'web'}
+          timeTextStyle={{ left: { color: 'black' }, right: { color: 'white' } }}
+          isTyping={this.state.isTyping}
+        />
+      </View>
+    )
+  }
 }
