@@ -9,6 +9,10 @@ import CustomView from './example-expo/CustomView'
 import NavBar from './example-expo/NavBar'
 import messagesData from './example-expo/data/messages'
 
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
 })
@@ -31,19 +35,36 @@ const otherUser = {
 export default class App extends Component {
   state = {
     inverted: false,
-    step: 0,
+    step: messagesData.length,
     messages: [],
     loadEarlier: false,
     typingText: null,
     isLoadingEarlier: false,
     appIsReady: false,
     isTyping: false,
+    location: {
+      coords: {
+        lat: null,
+        lon: null
+      }
+    },
+    errorMessage: ""
   }
 
   _isMounted = false
 
   componentDidMount() {
     this._isMounted = true
+
+    // ask for location permission
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+
     // init with only system messages
     this.setState({
       messages: messagesData, // messagesData.filter(message => message.system),
@@ -55,6 +76,34 @@ export default class App extends Component {
   componentWillUnmount() {
     this._isMounted = false
   }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      // location permissions denied, display system message
+      const step = this.state.step + 2
+      this.setState((previousState: any) => {
+        let response = [] as unknown
+          response = [{
+            _id: step,
+            text: "Location permissions were denied. Please enable permissions for the best experience!",
+            createdAt: new Date(),
+            system: true
+          }] as unknown
+        return {
+          step,
+          messages: GiftedChat.append(
+            previousState.messages,
+            response as IMessage[]
+          )
+        }
+      })
+
+    } else {
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({ location });
+    }
+  };
 
   onLoadEarlier = () => {
     this.setState(() => {
@@ -100,7 +149,9 @@ export default class App extends Component {
 
     const data = JSON.stringify({
       "query": messages[0].text,
-      "dialog": this.dialogToken
+      "dialog": this.dialogToken,
+      "lat": this.state.location.coords.latitude,
+      "lon": this.state.location.coords.longitude
     });
 
     var xhr = new XMLHttpRequest();
