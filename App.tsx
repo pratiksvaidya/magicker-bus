@@ -9,7 +9,7 @@ import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import NavBar from './example-expo/NavBar'
 import messagesData from './example-expo/data/messages'
-import { NavigationContainer } from 'react-navigation/native'
+import { NavigationContainer, createAppContainer } from 'react-navigation/native'
 import { createStackNavigator } from 'react-navigation-stack'
 
 const styles = StyleSheet.create({
@@ -303,6 +303,19 @@ export default class App extends Component {
   }
 }
 
+export class ProfileScreen extends Component {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <Button title="Go to Jane's profile" onPress={() => navigate('Profile', { name: 'Jane' })} />
+    );
+  }
+}
+
 const MainNavigator = createStackNavigator({
   Home: { screen: App },
+  Profile: { screen: ProfileScreen },
 });
