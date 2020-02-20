@@ -100,13 +100,22 @@
     },
     "dependencies": {
         "@expo/react-native-action-sheet": "3.5.0",
+        "@react-native-community/masked-view": "0.1.5",
+        "@react-navigation/native": "^5.0.6",
+        "@react-navigation/stack": "^5.0.6",
         "moment": "^2.19.0",
         "prop-types": "15.7.2",
         "react-native-communications": "2.2.1",
+        "react-native-gesture-handler": "~1.5.0",
         "react-native-iphone-x-helper": "^1.2.0",
         "react-native-lightbox": "^0.8.1",
         "react-native-parsed-text": "https://github.com/EvanBacon/react-native-parsed-text.git",
+        "react-native-reanimated": "~1.4.0",
+        "react-native-safe-area-context": "0.6.0",
+        "react-native-screens": "2.0.0-alpha.12",
         "react-native-typing-animation": "^0.1.7",
+        "react-navigation": "^4.1.1",
+        "react-navigation-stack": "^2.1.1",
         "uuid": "3.3.3"
     },
     "peerDependencies": {

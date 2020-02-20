@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 import { AppLoading, Asset, Linking } from 'expo'
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Platform } from 'react-native'
@@ -8,6 +9,8 @@ import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import NavBar from './example-expo/NavBar'
 import messagesData from './example-expo/data/messages'
+import { NavigationContainer } from 'react-navigation/native'
+import { createStackNavigator } from 'react-navigation-stack'
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -135,7 +138,7 @@ export default class App extends Component {
     xhr.open("POST", url);
 
     // When using a Bearer token
-    xhr.setRequestHeader("Authorization", "Bearer ZIzq0rZMIIEQgLs4No3SF5ZtTdaepw"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
+    xhr.setRequestHeader("Authorization", "Bearer HhNwKIqSxfwU18g3yRm1WeUC5GYAmS"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
     // When using a Clinc API Key
     // xhr.setRequestHeader("Authorization", "app-key RQWkiEhwqp9BU04533bnT67FXaqwd0");
 
@@ -299,3 +302,7 @@ export default class App extends Component {
     )
   }
 }
+
+const MainNavigator = createStackNavigator({
+  Home: { screen: App },
+});
