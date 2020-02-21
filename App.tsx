@@ -7,7 +7,6 @@ import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
-import NavBar from './example-expo/NavBar'
 import messagesData from './example-expo/data/messages'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
@@ -44,6 +43,18 @@ class App extends Component {
   }
 
   _isMounted = false
+
+  // static navigationOptions = {
+  //   headerTitle: () => <Text>
+  //     TEST COMPONENT
+  //   </Text>,
+  //   headerRight: ({ navigation }) => (
+  //     <Button
+  //       onPress={() => navigation.navigate('Profile')}
+  //       title="Info"
+  //     />
+  //   ),
+  // };
 
   componentDidMount() {
     this._isMounted = true
@@ -273,8 +284,7 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
-        <NavBar />
-        <Button onPress={() => this.props.navigation.navigate('test')} title="Go to Test"></Button>
+        <Button onPress={() => this.props.navigation.navigate('Profile')} title="Go to Test"></Button>
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
@@ -304,38 +314,37 @@ class App extends Component {
   }
 }
 
-export class ProfileScreen extends Component {
-  static navigationOptions = {
-    title: 'Welcome',
-  };
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <Button title="Go to Jane's profile" onPress={() => navigate('Profile', { name: 'Jane' })} />
-    );
-  }
-}
-
-class Test extends Component {
+class User_Profile extends Component {
   render() {
     return (
       <View style={styles.container}>
         <Text>
           TEST COMPONENT
         </Text>
-        <Button onPress={() => this.props.navigation.navigate('home')} title="Go to App"></Button>
       </View>
     );
   }
 }
 
-const Navigator = createStackNavigator({
-  home: App,
-  test: Test
+
+// const AppNavigator = createStackNavigator({
+//   "Magicker Bus" : App,
+//   Profile : User_Profile
+// })
+
+const AppNavigator = createStackNavigator({
+  "Magicker Bus" : {
+    screen: App,
+    navigationOptions: ({ navigation }) => ({
+      headerRight: () => <Button onPress={() => this.props.navigation.navigate('Profile')} title="Go to Test"></Button>
+    }),
+  },
+  Profile : {
+    screen: User_Profile,
+    navigationOptions: ({ navigation }) => ({
+      headerRight: () => <Button onPress={() => this.props.navigation.navigate('App')} title="Go to Test"></Button>
+    }),
+  }
 })
 
-export default createAppContainer(Navigator)
-// const MainNavigator = createStackNavigator({
-//   Home: { screen: App },
-//   Profile: { screen: ProfileScreen },
-// });
+export default createAppContainer(AppNavigator)
