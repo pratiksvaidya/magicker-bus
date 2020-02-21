@@ -138,7 +138,7 @@ class App extends Component {
     xhr.open("POST", url);
 
     // When using a Bearer token
-    xhr.setRequestHeader("Authorization", "Bearer HhNwKIqSxfwU18g3yRm1WeUC5GYAmS"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
+    xhr.setRequestHeader("Authorization", "Bearer zyIZI3K13KFJUPMzX9oNEEXn5cMkx4"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
     // When using a Clinc API Key
     // xhr.setRequestHeader("Authorization", "app-key RQWkiEhwqp9BU04533bnT67FXaqwd0");
 
@@ -274,6 +274,7 @@ class App extends Component {
         testID='main'
       >
         <NavBar />
+        <Button onPress={() => this.props.navigation.navigate('test')} title="Go to Test"></Button>
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
@@ -322,6 +323,7 @@ class Test extends Component {
         <Text>
           TEST COMPONENT
         </Text>
+        <Button onPress={() => this.props.navigation.navigate('home')} title="Go to App"></Button>
       </View>
     );
   }
