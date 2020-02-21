@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
 import { AppLoading, Asset, Linking } from 'expo'
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Platform } from 'react-native'
+import { StyleSheet, View, Text, Platform, Button } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
@@ -9,8 +9,8 @@ import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import NavBar from './example-expo/NavBar'
 import messagesData from './example-expo/data/messages'
-import { NavigationContainer, createAppContainer } from 'react-navigation/native'
 import { createStackNavigator } from 'react-navigation-stack'
+import { createAppContainer } from 'react-navigation'
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -31,7 +31,7 @@ const otherUser = {
   avatar: 'https://facebook.github.io/react/img/logo_og.png',
 }
 
-export default class App extends Component {
+class App extends Component {
   state = {
     inverted: false,
     step: 0,
@@ -315,7 +315,25 @@ export class ProfileScreen extends Component {
   }
 }
 
-const MainNavigator = createStackNavigator({
-  Home: { screen: App },
-  Profile: { screen: ProfileScreen },
-});
+class Test extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>
+          TEST COMPONENT
+        </Text>
+      </View>
+    );
+  }
+}
+
+const Navigator = createStackNavigator({
+  home: App,
+  test: Test
+})
+
+export default createAppContainer(Navigator)
+// const MainNavigator = createStackNavigator({
+//   Home: { screen: App },
+//   Profile: { screen: ProfileScreen },
+// });
