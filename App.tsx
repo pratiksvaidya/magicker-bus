@@ -1,13 +1,15 @@
+import 'react-native-gesture-handler'
 import { AppLoading, Asset, Linking } from 'expo'
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Platform } from 'react-native'
+import { StyleSheet, View, Text, Platform, Button, AppRegistry } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
-import NavBar from './example-expo/NavBar'
 import messagesData from './example-expo/data/messages'
+import { createStackNavigator } from 'react-navigation-stack'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -32,7 +34,7 @@ const otherUser = {
   avatar: 'https://facebook.github.io/react/img/logo_og.png',
 }
 
-export default class App extends Component {
+class App extends Component {
   state = {
     inverted: false,
     step: messagesData.length,
@@ -52,6 +54,18 @@ export default class App extends Component {
   }
 
   _isMounted = false
+
+  // static navigationOptions = {
+  //   headerTitle: () => <Text>
+  //     TEST COMPONENT
+  //   </Text>,
+  //   headerRight: ({ navigation }) => (
+  //     <Button
+  //       onPress={() => navigation.navigate('Profile')}
+  //       title="Info"
+  //     />
+  //   ),
+  // };
 
   componentDidMount() {
     this._isMounted = true
@@ -352,3 +366,27 @@ export default class App extends Component {
     )
   }
 }
+
+const AppSwitchNavigator = createSwitchNavigator({
+  Welcome: {screen: WelcomeScreen},
+  Dashboard: {screen: DashboardScreen}
+})
+
+const AppContainer = createAppContainer(AppSwitchNavigator) **/
+
+const AppNavigator = createStackNavigator({
+  "Magicker Bus" : {
+    screen: App,
+    navigationOptions: ({ navigation }) => ({
+      headerRight: () => <Button onPress={() => this.props.navigation.navigate({routeName: 'Profile'})} title="Profile!"></Button>
+    }),
+  },
+  Profile : {
+    screen: User_Profile,
+    navigationOptions: ({ navigation }) => ({
+      // headerRight: () => <Button onPress={() => this.props.navigation.navigate('App')} title="Go to Test"></Button>
+    }),
+  }
+})
+
+export default createAppContainer(AppNavigator)
