@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
 import { AppLoading, Asset, Linking } from 'expo'
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Platform, Button, AppRegistry } from 'react-native'
+import { StyleSheet, View, Text, Platform, Button, AppRegistry, Picker, TextInput } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
@@ -360,6 +360,12 @@ class WelcomeScreen extends Component {
     return (
       <View style={styles.container}>
         <Text>Welcome Screen</Text>
+        <TextInput
+          placeholder="Email" />
+        <TextInput
+          secureTextEntry={true}
+          placeholder="Password"
+        />
         <Button title="Login" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
         <Button title="Signup" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
       </View>
