@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
 import { AppLoading, Asset, Linking } from 'expo'
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Platform, Button } from 'react-native'
+import { StyleSheet, View, Text, Platform, Button, AppRegistry } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
@@ -9,7 +9,7 @@ import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import messagesData from './example-expo/data/messages'
 import { createStackNavigator } from 'react-navigation-stack'
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -149,7 +149,7 @@ class App extends Component {
     xhr.open("POST", url);
 
     // When using a Bearer token
-    xhr.setRequestHeader("Authorization", "Bearer zyIZI3K13KFJUPMzX9oNEEXn5cMkx4"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
+    xhr.setRequestHeader("Authorization", "Bearer m2aBKRZ3sAD7ZT6s0WAZOk4mjwcaAB"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
     // When using a Clinc API Key
     // xhr.setRequestHeader("Authorization", "app-key RQWkiEhwqp9BU04533bnT67FXaqwd0");
 
@@ -284,7 +284,7 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
-        <Button onPress={() => this.props.navigation.navigate('Profile')} title="Go to Test"></Button>
+        <Button onPress={() => this.props.navigation.navigate('Profile')} title="Profile"></Button>
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
@@ -319,30 +319,53 @@ class User_Profile extends Component {
     return (
       <View style={styles.container}>
         <Text>
-          TEST COMPONENT
+          User info here
         </Text>
       </View>
     );
   }
 }
 
+// Switch navigator for login screen, have to restructure App component first
+/**
+class WelcomeScreen extends Component {
+  render() {
+    return (
+      <View>
+        <Text>Welcome Screen</Text>
+      </View>
+    );
+  }
+}
 
-// const AppNavigator = createStackNavigator({
-//   "Magicker Bus" : App,
-//   Profile : User_Profile
-// })
+class DashboardScreen extends Component {
+  render() {
+    return (
+      <View>
+        <Text>Welcome Screen</Text>
+      </View>
+    );
+  }
+}
+
+const AppSwitchNavigator = createSwitchNavigator({
+  Welcome: {screen: WelcomeScreen},
+  Dashboard: {screen: DashboardScreen}
+})
+
+const AppContainer = createAppContainer(AppSwitchNavigator) **/
 
 const AppNavigator = createStackNavigator({
   "Magicker Bus" : {
     screen: App,
     navigationOptions: ({ navigation }) => ({
-      headerRight: () => <Button onPress={() => this.props.navigation.navigate('Profile')} title="Go to Test"></Button>
+      headerRight: () => <Button onPress={() => this.props.navigation.navigate({routeName: 'Profile'})} title="Profile!"></Button>
     }),
   },
   Profile : {
     screen: User_Profile,
     navigationOptions: ({ navigation }) => ({
-      headerRight: () => <Button onPress={() => this.props.navigation.navigate('App')} title="Go to Test"></Button>
+      // headerRight: () => <Button onPress={() => this.props.navigation.navigate('App')} title="Go to Test"></Button>
     }),
   }
 })
