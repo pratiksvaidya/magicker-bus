@@ -4,6 +4,14 @@
     "slug": "MagickerBus",
     "privacy": "public",
     "sdkVersion": "36.0.0",
+    "ios": {
+      "bundleIdentifier": "com.498team10.magicker-bus",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.498team10.magicker-bus",
+      "versionCode": 1
+    },
     "platforms": [
       "ios",
       "android",

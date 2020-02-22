@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler'
 import { AppLoading, Asset, Linking } from 'expo'
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Platform, Button, AppRegistry } from 'react-native'
+import { StyleSheet, View, Text, Platform, Button, AppRegistry, Picker, TextInput } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
@@ -42,7 +42,6 @@ class App extends Component {
     loadEarlier: false,
     typingText: null,
     isLoadingEarlier: false,
-    appIsReady: false,
     isTyping: false,
     location: {
       coords: {
@@ -82,7 +81,6 @@ class App extends Component {
     // init with only system messages
     this.setState({
       messages: messagesData, // messagesData.filter(message => message.system),
-      appIsReady: true,
       isTyping: false,
     })
   }
@@ -327,9 +325,6 @@ class App extends Component {
   renderQuickReplySend = () => <Text>{' custom send =>'}</Text>
 
   render() {
-    if (!this.state.appIsReady) {
-      return <AppLoading />
-    }
     return (
       <View
         style={styles.container}
@@ -367,13 +362,19 @@ class App extends Component {
   }
 }
 
-const AppSwitchNavigator = createSwitchNavigator({
-  Welcome: {screen: WelcomeScreen},
-  Dashboard: {screen: DashboardScreen}
-})
+class User_Profile extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>
+          User info here
+        </Text>
+      </View>
+    );
+  }
+}
 
-const AppContainer = createAppContainer(AppSwitchNavigator) **/
-
+// App navigation
 const AppNavigator = createStackNavigator({
   "Magicker Bus" : {
     screen: App,
@@ -388,5 +389,64 @@ const AppNavigator = createStackNavigator({
     }),
   }
 })
-
 export default createAppContainer(AppNavigator)
+
+
+// Switch navigator for login screen, have to restructure App component first
+class WelcomeScreen extends Component {
+  state = {
+    appIsReady: false,
+  }
+  _isMounted = false
+
+  componentDidMount() {
+    this._isMounted = true
+    this.setState({
+      appIsReady: true,
+    })
+  }
+
+  render() {
+    if (!this.state.appIsReady) {
+      return <AppLoading />
+    }
+    return (
+      <View style={{
+        position: "relative",
+        alignSelf: "center",
+        marginTop: 64
+      }}>
+        <Button title="Login" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
+        <Button title="Signup" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
+        <Text>Welcome Screen</Text>
+        <TextInput
+          placeholder="Email"
+          autoCapitalize = 'none'
+        />
+        <TextInput
+          secureTextEntry={true}
+          placeholder="Password"
+          autoCapitalize = 'none'
+        />
+      </View>
+    );
+  }
+}
+
+class SignupScreen extends Component {
+  render() {
+    return (
+      <View>
+        <Text>Welcome Screen</Text>
+      </View>
+    );
+  }
+}
+
+const AppSwitchNavigator = createSwitchNavigator({
+  Welcome: {screen: WelcomeScreen},
+  DashboardScreen : {screen: AppNavigator}
+})
+
+const AppContainer = createAppContainer(AppSwitchNavigator)
+export default AppContainer
