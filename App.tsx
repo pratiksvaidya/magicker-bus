@@ -11,6 +11,10 @@ import messagesData from './example-expo/data/messages'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
 })
@@ -33,12 +37,19 @@ const otherUser = {
 class App extends Component {
   state = {
     inverted: false,
-    step: 0,
+    step: messagesData.length,
     messages: [],
     loadEarlier: false,
     typingText: null,
     isLoadingEarlier: false,
     isTyping: false,
+    location: {
+      coords: {
+        lat: null,
+        lon: null
+      }
+    },
+    errorMessage: ""
   }
 
   _isMounted = false
@@ -57,6 +68,16 @@ class App extends Component {
 
   componentDidMount() {
     this._isMounted = true
+
+    // ask for location permission
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+
     // init with only system messages
     this.setState({
       messages: messagesData, // messagesData.filter(message => message.system),
@@ -67,6 +88,34 @@ class App extends Component {
   componentWillUnmount() {
     this._isMounted = false
   }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      // location permissions denied, display system message
+      const step = this.state.step + 2
+      this.setState((previousState: any) => {
+        let response = [] as unknown
+          response = [{
+            _id: step,
+            text: "Location permissions were denied. Please enable permissions for the best experience!",
+            createdAt: new Date(),
+            system: true
+          }] as unknown
+        return {
+          step,
+          messages: GiftedChat.append(
+            previousState.messages,
+            response as IMessage[]
+          )
+        }
+      })
+
+    } else {
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({ location });
+    }
+  };
 
   onLoadEarlier = () => {
     this.setState(() => {
@@ -92,6 +141,8 @@ class App extends Component {
     }, 1000) // simulating network
   }
 
+  dialogToken = ""
+
   onSend = (messages = []) => {
     const step = this.state.step + 1
     this.setState((previousState: any) => {
@@ -109,7 +160,10 @@ class App extends Component {
     const url = "https://api.clinc.ai/v1/query/"
 
     const data = JSON.stringify({
-      "query": messages[0],
+      "query": messages[0].text,
+      "dialog": this.dialogToken,
+      "lat": this.state.location.coords.latitude,
+      "lon": this.state.location.coords.longitude
     });
 
     var xhr = new XMLHttpRequest();
@@ -118,7 +172,8 @@ class App extends Component {
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         var jsonResponse = JSON.parse(this.responseText);
-        console.log(this.responseText);
+        app.dialogToken = jsonResponse.dialog;
+        console.log(jsonResponse);
 
         app.setState((previousState: any) => {
           let response = [] as unknown
@@ -146,10 +201,8 @@ class App extends Component {
 
     xhr.open("POST", url);
 
-    // When using a Bearer token
-    xhr.setRequestHeader("Authorization", "Bearer m2aBKRZ3sAD7ZT6s0WAZOk4mjwcaAB"); // <MANUALLY UPDATE AUTH TOKEN FOR NOW>
     // When using a Clinc API Key
-    // xhr.setRequestHeader("Authorization", "app-key RQWkiEhwqp9BU04533bnT67FXaqwd0");
+    xhr.setRequestHeader("Authorization", "app-key 9f9c551de45f499c5c291472d2779ac7b497e9b9");
 
     xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -279,7 +332,7 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
-        <Button onPress={() => this.props.navigation.navigate('Profile')} title="Profile"></Button>
+        <NavBar />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
