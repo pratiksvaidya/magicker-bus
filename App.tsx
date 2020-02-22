@@ -358,16 +358,23 @@ class WelcomeScreen extends Component {
       return <AppLoading />
     }
     return (
-      <View style={styles.container}>
+      <View style={{
+        position: "relative",
+        alignSelf: "center",
+        marginTop: 64
+      }}>
+        <Button title="Login" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
+        <Button title="Signup" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
         <Text>Welcome Screen</Text>
         <TextInput
-          placeholder="Email" />
+          placeholder="Email"
+          autoCapitalize = 'none'
+        />
         <TextInput
           secureTextEntry={true}
           placeholder="Password"
+          autoCapitalize = 'none'
         />
-        <Button title="Login" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
-        <Button title="Signup" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
       </View>
     );
   }
