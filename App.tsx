@@ -1,8 +1,9 @@
 import 'react-native-gesture-handler'
-import { AppLoading, Asset, Linking } from 'expo'
+import Expo, { Asset, Linking } from 'expo'
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Platform, Button, AppRegistry, Picker, TextInput } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
+import { AuthScreen } from './googlesignin.tsx'
 
 import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
@@ -14,6 +15,17 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+
+import firebase from 'firebase'
+import { firebaseConfig } from './firebaseConfig'
+import WelcomeScreen from './screens/WelcomeScreen.js'
+import LoginScreen from './screens/LoginScreen.js'
+
+// initialize firebase app
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -54,17 +66,6 @@ class App extends Component {
 
   _isMounted = false
 
-  // static navigationOptions = {
-  //   headerTitle: () => <Text>
-  //     TEST COMPONENT
-  //   </Text>,
-  //   headerRight: ({ navigation }) => (
-  //     <Button
-  //       onPress={() => navigation.navigate('Profile')}
-  //       title="Info"
-  //     />
-  //   ),
-  // };
 
   componentDidMount() {
     this._isMounted = true
@@ -332,7 +333,6 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
-        <NavBar />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
@@ -379,7 +379,7 @@ const AppNavigator = createStackNavigator({
   "Magicker Bus" : {
     screen: App,
     navigationOptions: ({ navigation }) => ({
-      headerRight: () => <Button onPress={() => this.props.navigation.navigate({routeName: 'Profile'})} title="Profile!"></Button>
+      // headerRight: () => <Button onPress={() => this.props.navigation.navigate({routeName: 'Profile'})} title="Profile!"></Button>
     }),
   },
   Profile : {
@@ -391,61 +391,10 @@ const AppNavigator = createStackNavigator({
 })
 export default createAppContainer(AppNavigator)
 
-
-// Switch navigator for login screen, have to restructure App component first
-class WelcomeScreen extends Component {
-  state = {
-    appIsReady: false,
-  }
-  _isMounted = false
-
-  componentDidMount() {
-    this._isMounted = true
-    this.setState({
-      appIsReady: true,
-    })
-  }
-
-  render() {
-    if (!this.state.appIsReady) {
-      return <AppLoading />
-    }
-    return (
-      <View style={{
-        position: "relative",
-        alignSelf: "center",
-        marginTop: 64
-      }}>
-        <Button title="Login" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
-        <Button title="Signup" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
-        <Text>Welcome Screen</Text>
-        <TextInput
-          placeholder="Email"
-          autoCapitalize = 'none'
-        />
-        <TextInput
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize = 'none'
-        />
-      </View>
-    );
-  }
-}
-
-class SignupScreen extends Component {
-  render() {
-    return (
-      <View>
-        <Text>Welcome Screen</Text>
-      </View>
-    );
-  }
-}
-
 const AppSwitchNavigator = createSwitchNavigator({
-  Welcome: {screen: WelcomeScreen},
-  DashboardScreen : {screen: AppNavigator}
+  WelcomeScreen: WelcomeScreen,
+  LoginScreen: LoginScreen,
+  DashboardScreen : AppNavigator
 })
 
 const AppContainer = createAppContainer(AppSwitchNavigator)

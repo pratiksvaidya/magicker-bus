@@ -9,7 +9,7 @@
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.498team10.magicker-bus",
+      "package": "com.team10.magickerbus",
       "versionCode": 1
     },
     "platforms": [
