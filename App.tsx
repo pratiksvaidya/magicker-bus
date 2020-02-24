@@ -332,7 +332,6 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
-        <NavBar />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
