@@ -1,40 +1,40 @@
 {
-  "expo": {
-    "name": "Magicker Bus",
-    "slug": "MagickerBus",
-    "privacy": "public",
-    "sdkVersion": "36.0.0",
-    "ios": {
-      "bundleIdentifier": "com.498team10.magicker-bus",
-      "buildNumber": "1.0.0"
-    },
-    "android": {
-      "package": "com.498team10.magicker-bus",
-      "versionCode": 1
-    },
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "description": "A conversational assistant helping you navigate the University of Michigan's blue buses to get to your desired destinations around campus!",
-    "githubUrl": "https://github.com/pratiksvaidya/magicker-bus"
-  }
+    "expo": {
+        "name": "Magicker Bus",
+        "slug": "MagickerBus",
+        "privacy": "public",
+        "sdkVersion": "36.0.0",
+        "ios": {
+            "bundleIdentifier": "com.eecs498.team10.magickerBus",
+            "buildNumber": "1.0.0"
+        },
+        "android": {
+            "package": "com.eecs498.team10.magickerBus",
+            "versionCode": 1
+        },
+        "platforms": [
+            "ios",
+            "android",
+            "web"
+        ],
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "supportsTablet": true
+        },
+        "description": "A conversational assistant helping you navigate the University of Michigan's blue buses to get to your desired destinations around campus!",
+        "githubUrl": "https://github.com/pratiksvaidya/magicker-bus"
+    }
 }
