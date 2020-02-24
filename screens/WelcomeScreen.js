@@ -21,9 +21,11 @@ class WelcomeScreen extends Component {
   checkIfLoggedIn = () => {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        this.props.navigation.navigate('App');
+        console.log('state changed going to app');
+        this.props.navigation.navigate('DashboardScreen');
       }
       else {
+        console.log('state changed going to login');
         this.props.navigation.navigate('LoginScreen');
       }
     }.bind(this))
@@ -35,9 +37,6 @@ class WelcomeScreen extends Component {
     }
     return ( // FIXME: shouldnt be rendering, should redirect to DashboardScreen or LoginScreen
       <View style={styles.container}>
-        <Button title="Login" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
-        <Button title="Signup" onPress={() => this.props.navigation.navigate('DashboardScreen')}/>
-        <Text>Welcome Screen</Text>
       </View>
     );
   }
