@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler'
-import Expo, { Asset, Linking } from 'expo'
+import { Asset, Linking } from 'expo'
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Platform, Button, AppRegistry, Picker, TextInput } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
@@ -15,6 +15,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import * as Expo from 'expo';
 
 import firebase from 'firebase'
 import { firebaseConfig } from './firebaseConfig'

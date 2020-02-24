@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>484198071246-a71marho3busjb4mjb10568uin7b5nq6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.484198071246-a71marho3busjb4mjb10568uin7b5nq6</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>484198071246-nd14urt85tgpnoln68900seum4jktvku.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCJHZoHcR-PE8huzWljonIoy9IDYgvICwo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>484198071246</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.498team10.magicker-bus</string>
+	<key>PROJECT_ID</key>
+	<string>magicker-bus</string>
+	<key>STORAGE_BUCKET</key>
+	<string>magicker-bus.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:484198071246:ios:e37c3e22d3e43c08f1099f</string>
+	<key>DATABASE_URL</key>
+	<string>https://magicker-bus.firebaseio.com</string>
+</dict>
+</plist>

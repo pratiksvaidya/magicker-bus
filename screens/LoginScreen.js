@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Button } from 'react-native'
-import Expo from 'expo'
+import * as Expo from 'expo'
+import * as Google from 'expo-google-app-auth'
 
 class LoginScreen extends Component {
 
   signInWithGoogleAsync = async() => {
   try {
     const result = await Google.logInAsync({
+      // behavior: 'web', // FIXME: may need to delete (deprecated)
       androidClientId: '484198071246-nd14urt85tgpnoln68900seum4jktvku.apps.googleusercontent.com',
-      behavior: 'web', // FIXME: may need to delete (deprecated)
       iosClientId: '484198071246-ss0f8u09json7sb5leta6daj18c2m562.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
     });

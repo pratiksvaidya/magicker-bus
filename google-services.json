@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "484198071246",
+    "firebase_url": "https://magicker-bus.firebaseio.com",
+    "project_id": "magicker-bus",
+    "storage_bucket": "magicker-bus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484198071246:android:84ab5bb0d582f21ef1099f",
+        "android_client_info": {
+          "package_name": "com.team10.magickerbus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484198071246-rnc31tdub6cj7qeipnd9q02g6fjseutu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEUvMlroUnPXUV28Zy7-MGKjBh6jmv5fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484198071246-rnc31tdub6cj7qeipnd9q02g6fjseutu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "484198071246-ss0f8u09json7sb5leta6daj18c2m562.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
