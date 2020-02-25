@@ -10,6 +10,7 @@ import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import messagesData from './example-expo/data/messages'
 import { createStackNavigator } from 'react-navigation-stack'
+import { createDrawerNavigator } from 'react-navigation-drawer'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 import Constants from 'expo-constants';
@@ -21,6 +22,7 @@ import firebase from 'firebase'
 import { firebaseConfig } from './firebaseConfig'
 import WelcomeScreen from './screens/WelcomeScreen.js'
 import LoginScreen from './screens/LoginScreen.js'
+import User_Profile from './screens/ProfileScreen.js'
 
 // initialize firebase app
 if (!firebase.apps.length) {
@@ -363,20 +365,8 @@ class App extends Component {
   }
 }
 
-class User_Profile extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>
-          User info here
-        </Text>
-      </View>
-    );
-  }
-}
-
 // App navigation
-const AppNavigator = createStackNavigator({
+const AppNavigator = createDrawerNavigator({
   "Magicker Bus" : {
     screen: App,
     navigationOptions: ({ navigation }) => ({
@@ -390,7 +380,6 @@ const AppNavigator = createStackNavigator({
     }),
   }
 })
-export default createAppContainer(AppNavigator)
 
 const AppSwitchNavigator = createSwitchNavigator({
   WelcomeScreen: WelcomeScreen,
