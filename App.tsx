@@ -9,6 +9,7 @@ import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import messagesData from './example-expo/data/messages'
+import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
@@ -31,7 +32,10 @@ if (!firebase.apps.length) {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { 
+    flex: 1,
+    backgroundColor: 'white',
+  },
 })
 
 const filterBotMessages = message =>
@@ -60,8 +64,8 @@ class App extends Component {
     isTyping: false,
     location: {
       coords: {
-        lat: null,
-        lon: null
+        latitude: null,
+        longitude: null
       }
     },
     errorMessage: ""
@@ -360,6 +364,7 @@ class App extends Component {
           timeTextStyle={{ left: { color: 'black' }, right: { color: 'white' } }}
           isTyping={this.state.isTyping}
         />
+        {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
       </View>
     )
   }

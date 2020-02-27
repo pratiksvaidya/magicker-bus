@@ -111,6 +111,7 @@
         "react-native-communications": "2.2.1",
         "react-native-gesture-handler": "~1.5.0",
         "react-native-iphone-x-helper": "^1.2.0",
+        "react-native-keyboard-spacer": "^0.4.1",
         "react-native-lightbox": "^0.8.1",
         "react-native-parsed-text": "https://github.com/EvanBacon/react-native-parsed-text.git",
         "react-native-reanimated": "~1.4.0",
