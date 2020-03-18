@@ -32,7 +32,7 @@ if (!firebase.apps.length) {
 
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     backgroundColor: 'white',
   },
@@ -171,7 +171,9 @@ class App extends Component {
       "query": messages[0].text,
       "dialog": this.dialogToken,
       "lat": this.state.location.coords.latitude,
-      "lon": this.state.location.coords.longitude
+      "lon": this.state.location.coords.longitude,
+      "time_offset": 0,
+      "device": "Alexa"
     });
 
     var xhr = new XMLHttpRequest();
