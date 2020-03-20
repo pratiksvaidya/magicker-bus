@@ -17,6 +17,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import * as Speech from 'expo-speech';
 import * as Expo from 'expo';
 
 import firebase from 'firebase'
@@ -184,6 +185,8 @@ class App extends Component {
         var jsonResponse = JSON.parse(this.responseText);
         app.dialogToken = jsonResponse.dialog;
         console.log(jsonResponse);
+
+        Speech.speak(jsonResponse.visuals.formattedResponse);
 
         app.setState((previousState: any) => {
           let response = [] as unknown

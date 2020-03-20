@@ -107,6 +107,7 @@
         "expo-file-system": "^8.0.0",
         "expo-google-app-auth": "^8.0.1",
         "expo-google-sign-in": "~8.0.0",
+        "expo-speech": "^8.0.0",
         "firebase": "^7.9.1",
         "moment": "^2.19.0",
         "prop-types": "15.7.2",
