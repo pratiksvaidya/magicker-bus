@@ -74,8 +74,8 @@ class LoginScreen extends Component {
   render() {
     return (
         <View style={styles.container}>
-        <Image source={require('../assets/logo_clear.png')} style={{width: 300, height: 300, justifyContent: 'flex-start'}}  />
-        <Text style={style={color:'white', fontSize: 25}}> Welcome to Magicker Bus! </Text>
+        <Text style={style={color:'white', fontSize: 30, textAlign: 'auto'}}> Welcome to Magicker Bus! </Text>
+        <Image source={require('../assets/logo_clear_notext.png')} style={{width: 200, height: 50}}  />
         <Text style={style={color:'white'}}> Sign in to start riding blue buses smarter and faster. </Text>
             <Button style={{backgroundColor: 'white'}} title={"Sign in with Google"}
              onPress={() =>this.signInWithGoogleAsync()}
