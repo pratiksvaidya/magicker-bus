@@ -186,7 +186,8 @@ class App extends Component {
         app.dialogToken = jsonResponse.dialog;
         console.log(jsonResponse);
 
-        Speech.speak(jsonResponse.visuals.formattedResponse);
+        Speech.speak(jsonResponse.visuals.formattedResponse, {language: 'en', pitch: 1,
+          voice: "com.apple.ttsbundle.Daniel-compact"});
 
         app.setState((previousState: any) => {
           let response = [] as unknown
