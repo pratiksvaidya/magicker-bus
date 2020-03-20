@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Button } from 'react-native'
+import { StyleSheet, View, Text, Image, Button } from 'react-native'
 import * as Expo from 'expo'
+import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 import * as Google from 'expo-google-app-auth'
 import firebase from 'firebase'
 
@@ -73,9 +74,13 @@ class LoginScreen extends Component {
   render() {
     return (
         <View style={styles.container}>
-            <Button title={"Sign in with Google"}
+        <Image source={require('../assets/logo_clear.png')} style={{width: 300, height: 300, justifyContent: 'flex-start'}}  />
+        <Text style={style={color:'white', fontSize: 25}}> Welcome to Magicker Bus! </Text>
+        <Text style={style={color:'white'}}> Sign in to start riding blue buses smarter and faster. </Text>
+            <Button style={{backgroundColor: 'white'}} title={"Sign in with Google"}
              onPress={() =>this.signInWithGoogleAsync()}
             />
+
         </View>
     );
   }
@@ -87,6 +92,12 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:'#75a7fa'
+  },
+
+  Image: {
+    flex:1,
     justifyContent: 'center'
   }
 })
