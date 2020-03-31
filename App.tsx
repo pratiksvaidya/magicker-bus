@@ -3,7 +3,6 @@ import { Asset, Linking } from 'expo'
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, Platform, Button, AppRegistry, Picker, TextInput } from 'react-native'
 import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
-import { AuthScreen } from './googlesignin.tsx'
 
 import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
@@ -153,6 +152,7 @@ class App extends Component {
   dialogToken = ""
 
   onSend = (messages = []) => {
+    console.log(messages);
     const step = this.state.step + 1
     this.setState((previousState: any) => {
       const sentMessages = [{ ...messages[0], sent: false, received: false }]
@@ -182,36 +182,84 @@ class App extends Component {
     const app = this;
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
-        var jsonResponse = JSON.parse(this.responseText);
-        app.dialogToken = jsonResponse.dialog;
-        console.log(jsonResponse);
+        try {
+          var jsonResponse = JSON.parse(this.responseText);
+          app.dialogToken = jsonResponse.dialog;
+          console.log(jsonResponse);
 
-        Speech.speak(jsonResponse.visuals.formattedResponse, {language: 'en', pitch: 1,
-          voice: "com.apple.ttsbundle.Daniel-compact"});
+          if (jsonResponse.visuals) {
+            Speech.speak(jsonResponse.visuals.formattedResponse, {language: 'en', pitch: 1,
+              voice: "com.apple.ttsbundle.Daniel-compact"});
 
-        app.setState((previousState: any) => {
-          let response = [] as unknown
-            response = [{
-              _id: app.state.step + 2,
-              text: jsonResponse.visuals.formattedResponse,
-              createdAt: new Date(),
-              user: {
-                _id: 2,
-                name: 'Magicker Bus',
-                avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-              },
-            }] as unknown
-          return {
-            messages: GiftedChat.append(
-              previousState.messages,
-              response as IMessage[]
-            )
+            app.setState((previousState: any) => {
+              let response = [] as unknown
+                response = [{
+                  _id: app.state.step + 2,
+                  text: jsonResponse.visuals.formattedResponse,
+                  createdAt: new Date(),
+                  user: {
+                    _id: 2,
+                    name: 'Magicker Bus',
+                    avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                  },
+                }] as unknown
+              return {
+                messages: GiftedChat.append(
+                  previousState.messages,
+                  response as IMessage[]
+                )
+              }
+            })
+          } else if (jsonResponse.message) {
+            Speech.speak(jsonResponse.message, {language: 'en', pitch: 1,
+              voice: "com.apple.ttsbundle.Daniel-compact"});
+
+            app.setState((previousState: any) => {
+              let response = [] as unknown
+                response = [{
+                  _id: app.state.step + 2,
+                  text: jsonResponse.message,
+                  createdAt: new Date(),
+                  system: true,
+                }] as unknown
+              return {
+                messages: GiftedChat.append(
+                  previousState.messages,
+                  response as IMessage[]
+                )
+              }
+            })
+          } else {
+            const message = 'An error occured.'
+            Speech.speak(message, {language: 'en', pitch: 1,
+              voice: "com.apple.ttsbundle.Daniel-compact"});
+
+            app.setState((previousState: any) => {
+              let response = [] as unknown
+                response = [{
+                  _id: app.state.step + 2,
+                  text: message,
+                  createdAt: new Date(),
+                  system: true,
+                }] as unknown
+              return {
+                messages: GiftedChat.append(
+                  previousState.messages,
+                  response as IMessage[]
+                )
+              }
+            })
           }
-        })
-
-
+        } catch (error) {
+          console.log("ERROR")
+          console.log(error)
+        }
       }
     });
+
+    xhr.onerror = function(e) {
+      console.log(e);
+    };
 
     xhr.open("POST", url);
 
@@ -278,12 +326,12 @@ class App extends Component {
   )
 
   renderCustomActions = props =>
-    Platform.OS === 'web' ? null : (
+    Platform.OS === 'web' || Platform.OS === 'android' ? null : (
       <CustomActions {...props} onSend={this.onSendFromUser} />
     )
 
   renderBubble = (props: any) => {
-    return <Bubble {...props} />
+    return <Bubble {...props} onSendFromUser={this.onSendFromUser} />
   }
 
   renderSystemMessage = props => {

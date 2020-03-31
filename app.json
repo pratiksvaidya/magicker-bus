@@ -5,8 +5,7 @@
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "ios": {
-      "bundleIdentifier": "com.498team10.magicker-bus",
-      "buildNumber": "1.0.0"
+      "supportsTablet": true
     },
     "android": {
       "package": "com.team10.magickerbus",
@@ -31,9 +30,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "description": "A conversational assistant helping you navigate the University of Michigan's blue buses to get to your desired destinations around campus!",
     "githubUrl": "https://github.com/pratiksvaidya/magicker-bus"
   }

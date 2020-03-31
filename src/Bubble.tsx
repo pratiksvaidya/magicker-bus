@@ -102,7 +102,7 @@ const styles = {
   }),
 }
 
-const DEFAULT_OPTION_TITLES = ['Copy Text', 'Cancel']
+const DEFAULT_OPTION_TITLES = ['Copy Text', 'Resend Message', 'Cancel']
 
 export type RenderMessageImageProps<TMessage extends IMessage> = Omit<
   BubbleProps<TMessage>,
@@ -206,6 +206,7 @@ export default class Bubble<
     renderTime: PropTypes.func,
     renderTicks: PropTypes.func,
     renderQuickReplies: PropTypes.func,
+    onSendFromUser: PropTypes.func,
     onQuickReply: PropTypes.func,
     position: PropTypes.oneOf(['left', 'right']),
     optionTitles: PropTypes.arrayOf(PropTypes.string),
@@ -237,14 +238,14 @@ export default class Bubble<
   }
 
   onLongPress = () => {
-    const { currentMessage } = this.props
+    const { currentMessage, onSendFromUser } = this.props
     if (this.props.onLongPress) {
       this.props.onLongPress(this.context, this.props.currentMessage)
     } else if (currentMessage && currentMessage.text) {
       const { optionTitles } = this.props
       const options =
         optionTitles && optionTitles.length > 0
-          ? optionTitles.slice(0, 2)
+          ? optionTitles.slice(0, 3)
           : DEFAULT_OPTION_TITLES
       const cancelButtonIndex = options.length - 1
       this.context.actionSheet().showActionSheetWithOptions(
@@ -256,6 +257,11 @@ export default class Bubble<
           switch (buttonIndex) {
             case 0:
               Clipboard.setString(currentMessage.text)
+              break
+            case 1:
+              onSendFromUser([{ 
+                text: currentMessage.text,
+              }]);
               break
             default:
               break
