@@ -74,13 +74,11 @@ class LoginScreen extends Component {
   render() {
     return (
         <View style={styles.container}>
-        <Text style={style={color:'white', fontSize: 30, textAlign: 'auto'}}> Welcome to Magicker Bus! </Text>
-        <Image source={require('../assets/logo_clear_notext.png')} style={{width: 200, height: 50}}  />
-        <Text style={style={color:'white'}}> Sign in to start riding blue buses smarter and faster. </Text>
-            <Button style={{backgroundColor: 'white'}} title={"Sign in with Google"}
-             onPress={() =>this.signInWithGoogleAsync()}
-            />
-
+          <Text style={style={color:'white', fontSize: 30, textAlign: 'center', marginBottom: 40}}> Welcome to Magicker Bus! </Text>
+          <Image source={require('../assets/logo_clear_notext.png')} style={{width: 200, height: 50}}  />
+          <Text style={style={color:'white', marginTop: 40, marginBottom: 20}}> Sign in to start riding blue buses smarter and faster. </Text>
+          <Button style={{backgroundColor: 'white'}} title={"Sign in with Google"}
+              onPress={() =>this.signInWithGoogleAsync()}/>
         </View>
     );
   }
