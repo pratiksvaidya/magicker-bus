@@ -68,6 +68,7 @@ class App extends Component {
         longitude: null
       }
     },
+    user: null,
     errorMessage: ""
   }
 
@@ -76,6 +77,10 @@ class App extends Component {
 
   componentDidMount() {
     this._isMounted = true
+
+    this.setState({
+      user: firebase.auth().currentUser
+    });
 
     // ask for location permission
     if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -173,6 +178,7 @@ class App extends Component {
       "dialog": this.dialogToken,
       "lat": this.state.location.coords.latitude,
       "lon": this.state.location.coords.longitude,
+      "user": this.state.user,
       "time_offset": 0,
       "device": "Alexa"
     });
@@ -267,7 +273,7 @@ class App extends Component {
     xhr.setRequestHeader("Authorization", "app-key 9f9c551de45f499c5c291472d2779ac7b497e9b9");
 
     xhr.setRequestHeader("Content-Type", "application/json");
-
+    console.log('data', data)
     xhr.send(data);
   }
 
