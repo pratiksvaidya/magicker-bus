@@ -49,14 +49,12 @@ export interface MessageProps<TMessage extends IMessage> {
     props: MessageProps<IMessage>,
     nextProps: MessageProps<IMessage>,
   ): boolean
-  onSend?(): void
 }
 
 export default class Message<
   TMessage extends IMessage = IMessage
 > extends React.Component<MessageProps<TMessage>> {
   static defaultProps = {
-    onSend: () => {},
     renderAvatar: undefined,
     renderBubble: null,
     renderDay: null,
@@ -73,7 +71,6 @@ export default class Message<
   }
 
   static propTypes = {
-    onSend: PropTypes.func,
     renderAvatar: PropTypes.func,
     showUserAvatar: PropTypes.bool,
     renderBubble: PropTypes.func,
@@ -170,7 +167,7 @@ export default class Message<
   }
 
   render() {
-    const { onSend, currentMessage, nextMessage, position, containerStyle } = this.props
+    const { currentMessage, nextMessage, position, containerStyle } = this.props
     if (currentMessage) {
       const sameUser = isSameUser(currentMessage, nextMessage!)
       return (
@@ -186,15 +183,6 @@ export default class Message<
                 !this.props.inverted && { marginBottom: 2 },
                 containerStyle && containerStyle[position],
               ]}
-              onTouchStart={() => {
-                if (onSend) {
-                  onSend([{ text: this.props.currentMessage.text,
-                    sent: false,
-                    _id: Math.round(Math.random() * 1000000),
-                    createdAt: new Date(),
-                    user:{_id:1} }], true)
-                }
-              }}
             >
               {this.props.position === 'left' ? this.renderAvatar() : null}
               {this.renderBubble()}
