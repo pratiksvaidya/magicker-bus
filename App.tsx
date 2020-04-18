@@ -69,6 +69,7 @@ class App extends Component {
       }
     },
     user: null,
+    homeAddress: null,
     errorMessage: ""
   }
 
@@ -80,6 +81,14 @@ class App extends Component {
 
     this.setState({
       user: firebase.auth().currentUser
+    })
+    
+    const app = this;
+    var userRef = firebase.database().ref(`users/${firebase.auth().currentUser.providerData[0].uid}`);
+    userRef.on('value', function(snapshot) {
+      app.setState({
+        homeAddress: snapshot.val().homeAddress,
+      })
     });
 
     // ask for location permission
@@ -179,6 +188,7 @@ class App extends Component {
       "lat": this.state.location.coords.latitude,
       "lon": this.state.location.coords.longitude,
       "user": this.state.user,
+      "homeAddress": this.state.homeAddress,
       "time_offset": 0,
       "device": "Alexa"
     });
