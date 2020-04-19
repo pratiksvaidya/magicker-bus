@@ -206,7 +206,7 @@ class App extends Component {
           console.log(jsonResponse);
 
           if (jsonResponse.visuals) {
-            Speech.speak(jsonResponse.visuals.formattedResponse, {language: 'en', pitch: 1,
+            Speech.speak(jsonResponse.visuals.speakableResponse, {language: 'en', pitch: 1,
               voice: "com.apple.ttsbundle.Daniel-compact"});
 
               // Add route image if needed
