@@ -216,6 +216,17 @@ class App extends Component {
                         .getDownloadURL()
                         .then(function(url) {
                           app.setState((previousState: any) => {
+                            // Parse response newlines
+                            let text = ""
+                            let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
+                            console.log("split text", split_text)
+                            for (var i = 0; i < split_text.length; i++) {
+                              text += split_text[i]
+                              if (i !== split_text.length - 1) {
+                                text += "\n"
+                              }
+                            }
+
                             let response_1 = []
                               response_1 = [{
                                 _id: app.state.step + 2,
@@ -248,10 +259,21 @@ class App extends Component {
               }
               else {
                 app.setState((previousState: any) => {
+                      // Parse response newlines
+                      let text = ""
+                      let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
+                      console.log("split text", split_text)
+                      for (var i = 0; i < split_text.length; i++) {
+                        text += split_text[i]
+                        if (i !== split_text.length - 1) {
+                          text += "\n"
+                        }
+                      }
+
                       let response = [] as unknown
                         response = [{
                           _id: app.state.step + 2,
-                          text: jsonResponse.visuals.formattedResponse,
+                          text: text,
                           createdAt: new Date(),
                           user: {
                             _id: 2,
