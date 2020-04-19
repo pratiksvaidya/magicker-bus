@@ -17,7 +17,7 @@ class User_Profile extends Component {
     const app = this;
     return this.database.ref(`users/${this.state.user.providerData[0].uid}`).once('value').then(function(snapshot) {
       app.setState({
-        homeAddress: snapshot.val().homeAddress,
+        homeAddress: snapshot.val() ? snapshot.val().homeAddress : '1100 N University Ave, Ann Arbor, MI 48109',
       })
     });
   }
