@@ -212,12 +212,9 @@ class App extends Component {
               // Add route image if needed
               if (((jsonResponse.bl_resp || {}).slots || {})._ROUTE_NAME_) {
                 let route = jsonResponse.bl_resp.slots._ROUTE_NAME_.values[0].route_code;
-                let route_img_URL = "";
                 storage.ref("bus_routes/" + route.toLowerCase() + ".png")
                         .getDownloadURL()
                         .then(function(url) {
-                          console.log("ROUTE",route)
-                          console.log("URL",url)
                           app.setState((previousState: any) => {
                             let response_1 = []
                               response_1 = [{
@@ -240,7 +237,6 @@ class App extends Component {
                                   avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
                                 },
                               }];
-                            console.log("RESPONSE 1", response_1)
                             return {
                               messages: GiftedChat.append(
                                 previousState.messages,
