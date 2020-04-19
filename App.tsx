@@ -87,7 +87,7 @@ class App extends Component {
     var userRef = firebase.database().ref(`users/${firebase.auth().currentUser.providerData[0].uid}`);
     userRef.on('value', function(snapshot) {
       app.setState({
-        homeAddress: snapshot.val().homeAddress,
+        homeAddress: snapshot.val() ? snapshot.val().homeAddress : '1100 N University Ave, Ann Arbor, MI 48109',
       })
     });
 
