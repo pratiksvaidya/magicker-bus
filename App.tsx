@@ -30,6 +30,8 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
+// Get ref to firebase cloud storage
+var storage = firebase.storage()
 
 const styles = StyleSheet.create({
   container: {
@@ -82,7 +84,7 @@ class App extends Component {
     this.setState({
       user: firebase.auth().currentUser
     })
-    
+
     const app = this;
     var userRef = firebase.database().ref(`users/${firebase.auth().currentUser.providerData[0].uid}`);
     userRef.on('value', function(snapshot) {
@@ -207,25 +209,70 @@ class App extends Component {
             Speech.speak(jsonResponse.visuals.formattedResponse, {language: 'en', pitch: 1,
               voice: "com.apple.ttsbundle.Daniel-compact"});
 
-            app.setState((previousState: any) => {
-              let response = [] as unknown
-                response = [{
-                  _id: app.state.step + 2,
-                  text: jsonResponse.visuals.formattedResponse,
-                  createdAt: new Date(),
-                  user: {
-                    _id: 2,
-                    name: 'Magicker Bus',
-                    avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-                  },
-                }] as unknown
-              return {
-                messages: GiftedChat.append(
-                  previousState.messages,
-                  response as IMessage[]
-                )
+              // Add route image if needed
+              if (((jsonResponse.bl_resp || {}).slots || {})._ROUTE_NAME_) {
+                let route = jsonResponse.bl_resp.slots._ROUTE_NAME_.values[0].route_code;
+                let route_img_URL = "";
+                storage.ref("bus_routes/" + route.toLowerCase() + ".png")
+                        .getDownloadURL()
+                        .then(function(url) {
+                          console.log("ROUTE",route)
+                          console.log("URL",url)
+                          app.setState((previousState: any) => {
+                            let response_1 = []
+                              response_1 = [{
+                                _id: app.state.step + 2,
+                                text: "",
+                                image: url.toString(),
+                                createdAt: new Date(),
+                                user: {
+                                  _id: 2,
+                                  name: 'Magicker Bus',
+                                  avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                                },
+                              }, {
+                                _id: Math.round(Math.random() * 1000000),
+                                text: jsonResponse.visuals.formattedResponse,
+                                createdAt: new Date(),
+                                user: {
+                                  _id: 2,
+                                  name: 'Magicker Bus',
+                                  avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                                },
+                              }];
+                            console.log("RESPONSE 1", response_1)
+                            return {
+                              messages: GiftedChat.append(
+                                previousState.messages,
+                                response_1 as IMessage[]
+                              )
+                            }
+                            })
+                        });
               }
-            })
+              else {
+                app.setState((previousState: any) => {
+                      let response = [] as unknown
+                        response = [{
+                          _id: app.state.step + 2,
+                          text: jsonResponse.visuals.formattedResponse,
+                          createdAt: new Date(),
+                          user: {
+                            _id: 2,
+                            name: 'Magicker Bus',
+                            avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                          },
+                        }] as unknown
+
+                        return {
+                          messages: GiftedChat.append(
+                            previousState.messages,
+                            response as IMessage[]
+                          )
+                        }
+                })
+              }
+
           } else if (jsonResponse.message) {
             Speech.speak(jsonResponse.message, {language: 'en', pitch: 1,
               voice: "com.apple.ttsbundle.Daniel-compact"});
