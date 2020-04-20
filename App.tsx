@@ -217,14 +217,29 @@ class App extends Component {
                         .then(function(url) {
                           app.setState((previousState: any) => {
                             // Parse response newlines
-                            let text = ""
-                            let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
-                            console.log("split text", split_text)
+                            let text = "";
+                            let split_text = jsonResponse.visuals.formattedResponse.split("\\n");
                             for (var i = 0; i < split_text.length; i++) {
                               text += split_text[i]
                               if (i !== split_text.length - 1) {
                                 text += "\n"
                               }
+                            }
+
+                            // Parse response new message breaks
+                            let split_messages = [];
+                            let resplit_text = text.split("\\m");
+                            for (var i = 0; i < resplit_text.length; i++) {
+                              split_messages.push({
+                                _id: Math.round(Math.random() * 1000000),
+                                text: resplit_text[i],
+                                createdAt: new Date(),
+                                user: {
+                                  _id: 2,
+                                  name: 'Magicker Bus',
+                                  avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                                },
+                              });
                             }
 
                             let response_1 = []
@@ -238,20 +253,12 @@ class App extends Component {
                                   name: 'Magicker Bus',
                                   avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
                                 },
-                              }, {
-                                _id: Math.round(Math.random() * 1000000),
-                                text: jsonResponse.visuals.formattedResponse,
-                                createdAt: new Date(),
-                                user: {
-                                  _id: 2,
-                                  name: 'Magicker Bus',
-                                  avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-                                },
                               }];
+                              response_2 = response_1.concat(split_messages)
                             return {
                               messages: GiftedChat.append(
                                 previousState.messages,
-                                response_1 as IMessage[]
+                                response_2 as IMessage[]
                               )
                             }
                             })
@@ -259,16 +266,31 @@ class App extends Component {
               }
               else {
                 app.setState((previousState: any) => {
-                      // Parse response newlines
-                      let text = ""
-                      let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
-                      console.log("split text", split_text)
-                      for (var i = 0; i < split_text.length; i++) {
-                        text += split_text[i]
-                        if (i !== split_text.length - 1) {
-                          text += "\n"
-                        }
-                      }
+                  // Parse response newlines
+                  let text = "";
+                  let split_text = jsonResponse.visuals.formattedResponse.split("\\n");
+                  for (var i = 0; i < split_text.length; i++) {
+                    text += split_text[i]
+                    if (i !== split_text.length - 1) {
+                      text += "\n"
+                    }
+                  }
+
+                  // Parse response new message breaks
+                  let split_messages = [];
+                  let resplit_text = text.split("\\m");
+                  for (var i = 0; i < resplit_text.length; i++) {
+                    split_messages.push({
+                      _id: Math.round(Math.random() * 1000000),
+                      text: resplit_text[i],
+                      createdAt: new Date(),
+                      user: {
+                        _id: 2,
+                        name: 'Magicker Bus',
+                        avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                      },
+                    });
+                  }
 
                       let response = [] as unknown
                         response = [{
