@@ -6,6 +6,7 @@ import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
+import NavBar from './example-expo/NavBar'
 import CustomView from './example-expo/CustomView'
 import messagesData from './example-expo/data/messages'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
@@ -72,7 +73,8 @@ class App extends Component {
     },
     user: null,
     homeAddress: null,
-    errorMessage: ""
+    errorMessage: "",
+    mute: false,
   }
 
   _isMounted = false
@@ -141,6 +143,10 @@ class App extends Component {
     }
   };
 
+  onMutePress = () => {
+    this.setState((prevState) => ({ mute: !prevState.mute }))
+  }
+
   onLoadEarlier = () => {
     this.setState(() => {
       return {
@@ -206,8 +212,10 @@ class App extends Component {
           console.log(jsonResponse);
 
           if (jsonResponse.visuals) {
+            if (!app.state.mute) {
             Speech.speak(jsonResponse.visuals.speakableResponse, {language: 'en', pitch: 1,
               voice: "com.apple.ttsbundle.Daniel-compact"});
+            }
 
               // Add route image if needed
               if (((jsonResponse.bl_resp || {}).slots || {})._ROUTE_NAME_) {
@@ -497,6 +505,10 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
+        <NavBar
+          onMute={this.onMutePress}
+          mute={this.state.mute}
+        />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
