@@ -6,6 +6,7 @@ import { Bubble, GiftedChat, SystemMessage, IMessage } from './src'
 
 import AccessoryBar from './example-expo/AccessoryBar'
 import CustomActions from './example-expo/CustomActions'
+import NavBar from './example-expo/NavBar'
 import CustomView from './example-expo/CustomView'
 import messagesData from './example-expo/data/messages'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
@@ -27,7 +28,7 @@ import User_Profile from './screens/ProfileScreen.js'
 
 // initialize firebase app
 if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 }
 
 // Get ref to firebase cloud storage
@@ -72,7 +73,8 @@ class App extends Component {
     },
     user: null,
     homeAddress: null,
-    errorMessage: ""
+    errorMessage: "",
+    mute: false,
   }
 
   _isMounted = false
@@ -87,7 +89,7 @@ class App extends Component {
 
     const app = this;
     var userRef = firebase.database().ref(`users/${firebase.auth().currentUser.providerData[0].uid}`);
-    userRef.on('value', function(snapshot) {
+    userRef.on('value', function (snapshot) {
       app.setState({
         homeAddress: snapshot.val() ? snapshot.val().homeAddress : '1100 N University Ave, Ann Arbor, MI 48109',
       })
@@ -120,12 +122,12 @@ class App extends Component {
       const step = this.state.step + 2
       this.setState((previousState: any) => {
         let response = [] as unknown
-          response = [{
-            _id: step,
-            text: "Location permissions were denied. Please enable permissions for the best experience!",
-            createdAt: new Date(),
-            system: true
-          }] as unknown
+        response = [{
+          _id: step,
+          text: "Location permissions were denied. Please enable permissions for the best experience!",
+          createdAt: new Date(),
+          system: true
+        }] as unknown
         return {
           step,
           messages: GiftedChat.append(
@@ -140,6 +142,10 @@ class App extends Component {
       this.setState({ location });
     }
   };
+
+  onMutePress = () => {
+    this.setState((prevState) => ({ mute: !prevState.mute }))
+  }
 
   onLoadEarlier = () => {
     this.setState(() => {
@@ -206,103 +212,109 @@ class App extends Component {
           console.log(jsonResponse);
 
           if (jsonResponse.visuals) {
-            Speech.speak(jsonResponse.visuals.speakableResponse, {language: 'en', pitch: 1,
-              voice: "com.apple.ttsbundle.Daniel-compact"});
+            if (!app.state.mute) {
+              Speech.speak(jsonResponse.visuals.speakableResponse, {
+                language: 'en', pitch: 1,
+                voice: "com.apple.ttsbundle.Daniel-compact"
+              });
+            }
 
-              // Add route image if needed
-              if (((jsonResponse.bl_resp || {}).slots || {})._ROUTE_NAME_) {
-                let route = jsonResponse.bl_resp.slots._ROUTE_NAME_.values[0].route_code;
-                storage.ref("bus_routes/" + route.toLowerCase() + ".png")
-                        .getDownloadURL()
-                        .then(function(url) {
-                          app.setState((previousState: any) => {
-                            // Parse response newlines
-                            let text = ""
-                            let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
-                            console.log("split text", split_text)
-                            for (var i = 0; i < split_text.length; i++) {
-                              text += split_text[i]
-                              if (i !== split_text.length - 1) {
-                                text += "\n"
-                              }
-                            }
-
-                            let response_1 = []
-                              response_1 = [{
-                                _id: app.state.step + 2,
-                                text: "",
-                                image: url.toString(),
-                                createdAt: new Date(),
-                                user: {
-                                  _id: 2,
-                                  name: 'Magicker Bus',
-                                  avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-                                },
-                              }, {
-                                _id: Math.round(Math.random() * 1000000),
-                                text: jsonResponse.visuals.formattedResponse,
-                                createdAt: new Date(),
-                                user: {
-                                  _id: 2,
-                                  name: 'Magicker Bus',
-                                  avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-                                },
-                              }];
-                            return {
-                              messages: GiftedChat.append(
-                                previousState.messages,
-                                response_1 as IMessage[]
-                              )
-                            }
-                            })
-                        });
-              }
-              else {
-                app.setState((previousState: any) => {
-                      // Parse response newlines
-                      let text = ""
-                      let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
-                      console.log("split text", split_text)
-                      for (var i = 0; i < split_text.length; i++) {
-                        text += split_text[i]
-                        if (i !== split_text.length - 1) {
-                          text += "\n"
-                        }
+            // Add route image if needed
+            if (((jsonResponse.bl_resp || {}).slots || {})._ROUTE_NAME_) {
+              let route = jsonResponse.bl_resp.slots._ROUTE_NAME_.values[0].route_code;
+              storage.ref("bus_routes/" + route.toLowerCase() + ".png")
+                .getDownloadURL()
+                .then(function (url) {
+                  app.setState((previousState: any) => {
+                    // Parse response newlines
+                    let text = ""
+                    let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
+                    console.log("split text", split_text)
+                    for (var i = 0; i < split_text.length; i++) {
+                      text += split_text[i]
+                      if (i !== split_text.length - 1) {
+                        text += "\n"
                       }
+                    }
 
-                      let response = [] as unknown
-                        response = [{
-                          _id: app.state.step + 2,
-                          text: text,
-                          createdAt: new Date(),
-                          user: {
-                            _id: 2,
-                            name: 'Magicker Bus',
-                            avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
-                          },
-                        }] as unknown
+                    let response_1 = []
+                    response_1 = [{
+                      _id: app.state.step + 2,
+                      text: "",
+                      image: url.toString(),
+                      createdAt: new Date(),
+                      user: {
+                        _id: 2,
+                        name: 'Magicker Bus',
+                        avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                      },
+                    }, {
+                      _id: Math.round(Math.random() * 1000000),
+                      text: jsonResponse.visuals.formattedResponse,
+                      createdAt: new Date(),
+                      user: {
+                        _id: 2,
+                        name: 'Magicker Bus',
+                        avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                      },
+                    }];
+                    return {
+                      messages: GiftedChat.append(
+                        previousState.messages,
+                        response_1 as IMessage[]
+                      )
+                    }
+                  })
+                });
+            }
+            else {
+              app.setState((previousState: any) => {
+                // Parse response newlines
+                let text = ""
+                let split_text = jsonResponse.visuals.formattedResponse.split("\\n")
+                console.log("split text", split_text)
+                for (var i = 0; i < split_text.length; i++) {
+                  text += split_text[i]
+                  if (i !== split_text.length - 1) {
+                    text += "\n"
+                  }
+                }
 
-                        return {
-                          messages: GiftedChat.append(
-                            previousState.messages,
-                            response as IMessage[]
-                          )
-                        }
-                })
-              }
+                let response = [] as unknown
+                response = [{
+                  _id: app.state.step + 2,
+                  text: text,
+                  createdAt: new Date(),
+                  user: {
+                    _id: 2,
+                    name: 'Magicker Bus',
+                    avatar: 'https://www.bing.com/th?id=AMMS_908e2971907c8f8a1d59b8d0b64103de&w=110&h=110&c=7&rs=1&qlt=80&pcl=f9f9f9&cdv=1&dpr=2&pid=16.1'
+                  },
+                }] as unknown
+
+                return {
+                  messages: GiftedChat.append(
+                    previousState.messages,
+                    response as IMessage[]
+                  )
+                }
+              })
+            }
 
           } else if (jsonResponse.message) {
-            Speech.speak(jsonResponse.message, {language: 'en', pitch: 1,
-              voice: "com.apple.ttsbundle.Daniel-compact"});
+            Speech.speak(jsonResponse.message, {
+              language: 'en', pitch: 1,
+              voice: "com.apple.ttsbundle.Daniel-compact"
+            });
 
             app.setState((previousState: any) => {
               let response = [] as unknown
-                response = [{
-                  _id: app.state.step + 2,
-                  text: jsonResponse.message,
-                  createdAt: new Date(),
-                  system: true,
-                }] as unknown
+              response = [{
+                _id: app.state.step + 2,
+                text: jsonResponse.message,
+                createdAt: new Date(),
+                system: true,
+              }] as unknown
               return {
                 messages: GiftedChat.append(
                   previousState.messages,
@@ -312,17 +324,19 @@ class App extends Component {
             })
           } else {
             const message = 'An error occured.'
-            Speech.speak(message, {language: 'en', pitch: 1,
-              voice: "com.apple.ttsbundle.Daniel-compact"});
+            Speech.speak(message, {
+              language: 'en', pitch: 1,
+              voice: "com.apple.ttsbundle.Daniel-compact"
+            });
 
             app.setState((previousState: any) => {
               let response = [] as unknown
-                response = [{
-                  _id: app.state.step + 2,
-                  text: message,
-                  createdAt: new Date(),
-                  system: true,
-                }] as unknown
+              response = [{
+                _id: app.state.step + 2,
+                text: message,
+                createdAt: new Date(),
+                system: true,
+              }] as unknown
               return {
                 messages: GiftedChat.append(
                   previousState.messages,
@@ -338,7 +352,7 @@ class App extends Component {
       }
     });
 
-    xhr.onerror = function(e) {
+    xhr.onerror = function (e) {
       console.log(e);
     };
 
@@ -475,6 +489,10 @@ class App extends Component {
         accessibilityLabel='main'
         testID='main'
       >
+        <NavBar
+          onMute={this.onMutePress}
+          mute={this.state.mute}
+        />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
@@ -499,7 +517,7 @@ class App extends Component {
           timeTextStyle={{ left: { color: 'black' }, right: { color: 'white' } }}
           isTyping={this.state.isTyping}
         />
-        {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
+        {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
       </View>
     )
   }
@@ -507,13 +525,13 @@ class App extends Component {
 
 // App navigation
 const AppNavigator = createDrawerNavigator({
-  "Magicker Bus" : {
+  "Magicker Bus": {
     screen: App,
     navigationOptions: ({ navigation }) => ({
       // headerRight: () => <Button onPress={() => this.props.navigation.navigate({routeName: 'Profile'})} title="Profile!"></Button>
     }),
   },
-  Profile : {
+  Profile: {
     screen: User_Profile,
     navigationOptions: ({ navigation }) => ({
       // headerRight: () => <Button onPress={() => this.props.navigation.navigate('App')} title="Go to Test"></Button>
@@ -524,7 +542,7 @@ const AppNavigator = createDrawerNavigator({
 const AppSwitchNavigator = createSwitchNavigator({
   WelcomeScreen: WelcomeScreen,
   LoginScreen: LoginScreen,
-  DashboardScreen : AppNavigator
+  DashboardScreen: AppNavigator
 })
 
 const AppContainer = createAppContainer(AppSwitchNavigator)

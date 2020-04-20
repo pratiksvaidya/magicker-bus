@@ -57,7 +57,7 @@ class LoginScreen extends Component {
     const result = await Google.logInAsync({
       androidClientId: '484198071246-nd14urt85tgpnoln68900seum4jktvku.apps.googleusercontent.com',
       iosClientId: '484198071246-ss0f8u09json7sb5leta6daj18c2m562.apps.googleusercontent.com',
-      scopes: ['profile', 'email', 'https://www.googleapis.com/auth/calendar.events.readonly'],
+      scopes: ['profile', 'email', 'https://www.googleapis.com/auth/calendar'],
     });
 
     if (result.type === 'success') {
